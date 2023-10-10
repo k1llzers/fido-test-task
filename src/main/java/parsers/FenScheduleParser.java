@@ -12,21 +12,30 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class FenScheduleParser extends ScheduleParser{
-    private final Specialization economic = new Specialization("Економіка, 3 р.н.");
-    private final Specialization finance = new Specialization("Фінанси, банківська справа та страхування, 3 р.н.");
-    private final Specialization marketing = new Specialization("Маркетинг, 3 р.н.");
-    private final Specialization management = new Specialization("Менеджмент, 3 р.н.");
+    private Specialization economic;
+    private Specialization finance;
+    private Specialization marketing;
+    private Specialization management;
 
     @Override
     public Faculty getSchedule(XSSFSheet sheet) {
         XSSFCell cell = sheet.getRow(5).getCell(0);
         Faculty faculty = new Faculty(cell.toString());
+        initializeTheSpeciality(sheet.getRow(6).getCell(0));
         fillSpecialization(sheet);
         faculty.addSpecialization(economic);
         faculty.addSpecialization(finance);
         faculty.addSpecialization(management);
         faculty.addSpecialization(marketing);
         return faculty;
+    }
+
+    private void initializeTheSpeciality(XSSFCell cell){
+        String year = cell.toString().substring(cell.toString().length() - 6);
+        economic = new Specialization("Економіка, " + year);
+        finance = new Specialization("Фінанси, банківська справа та страхування, " + year);
+        marketing = new Specialization("Маркетинг, " + year);
+        management = new Specialization("Менеджмент, " + year);
     }
 
     private void fillSpecialization(XSSFSheet sheet){
