@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import java.time.LocalTime;
@@ -29,6 +30,12 @@ public abstract class ScheduleParser {
             subject.addGroup(getGroup(group));
         }
         return subject;
+    }
+
+    public static ScheduleParser getParser(XSSFSheet sheet){
+        if (sheet.getRow(1).getCell(2).toString().contains("Глущенко"))
+            return new FenScheduleParser();
+        return new NormalScheduleParser();
     }
 
     private Group getGroup(Row group){
@@ -85,7 +92,7 @@ public abstract class ScheduleParser {
                 return IntStream.of(Integer.parseInt(e));
             else {
                 String[] splitWeek = e.split("-");
-                return IntStream.range(Integer.parseInt(splitWeek[0]), Integer.parseInt(splitWeek[1]) + 1);
+                return IntStream.range(Integer.parseInt(splitWeek[0].trim()), Integer.parseInt(splitWeek[1].trim()) + 1);
             }
         }).toArray();
     }
