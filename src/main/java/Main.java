@@ -13,7 +13,7 @@ public class Main {
         FileInputStream inputStream = new FileInputStream("3.xlsx");
         XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
         XSSFSheet sheet = workbook.getSheetAt(0);
-        ScheduleParser parser = new NormalScheduleParser();
+        ScheduleParser parser = ScheduleParser.getParser(sheet);
         Faculty schedule = parser.getSchedule(sheet);
         System.out.println(schedule);
     }
