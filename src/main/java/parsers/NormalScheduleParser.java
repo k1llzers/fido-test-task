@@ -31,8 +31,12 @@ public class NormalScheduleParser extends ScheduleParser{
         Map<String, List<Row>> subjects = rows.stream()
                 .skip(10)
                 .filter(row -> row.getCell(4) != null && !row.getCell(4).getStringCellValue().isEmpty())
-                .collect(Collectors.toMap(row ->
-                                row.getCell(2).getStringCellValue().substring(0, row.getCell(2).getStringCellValue().indexOf(",")),
+                .collect(Collectors.toMap(row -> {
+                            if (row.getCell(2).getStringCellValue().contains(",")) {
+                                return row.getCell(2).getStringCellValue().substring(0, row.getCell(2).getStringCellValue().indexOf(","));
+                            }
+                            return row.getCell(2).getStringCellValue();
+                        },
                         row -> new LinkedList<>(List.of(row)),
                         (list1, list2) -> {
                             list1.addAll(list2);
